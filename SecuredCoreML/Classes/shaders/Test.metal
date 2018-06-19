@@ -21,19 +21,23 @@ union bytes
  */
 template <typename FloatType, typename IntType>
 inline float crypt_value(const FloatType in,
-                         const texture2d<IntType, access::read> keyBytes [[texture(2)]],
+                         const texture2d<IntType, access::sample> keyBytes [[texture(2)]],
                          const ushort textureWidth,
                          const ushort3 gid [[thread_position_in_grid]])
 {
-    const ushort keyW = keyBytes.get_width();
-    const ushort keyH = keyBytes.get_height();
+    constexpr sampler s(coord::pixel, filter::nearest, address::clamp_to_zero);
 
-    const ushort keySize = keyH * keyW;
-    const ushort keyPos = gid.x % keySize;
+    const float2 pos = float2(gid.xy);// * 1 + ushort2(params.inputOffsetX, params.inputOffsetY);
+
+//    const ushort keyW = keyBytes.get_width();
+//    const ushort keyH = keyBytes.get_height();
+//
+//    const ushort keySize = keyH * keyW;
+//    const ushort keyPos = gid.x % keySize;
+//    
+//    const ushort2 keyPosVec(keyPos % keyW);
     
-    const ushort2 keyPosVec(keyPos % keyW);
-    
-    const int keyPart(keyBytes.read(keyPosVec)[0]);
+    const int keyPart = keyBytes.sample(s, pos)[0];
     
     bytes<FloatType, IntType> fb_in;
     bytes<FloatType, IntType> fb_out;
@@ -49,7 +53,7 @@ inline float crypt_value(const FloatType in,
 kernel void test(
   texture2d<float, access::read>    inTexture [[texture(0)]],
   texture2d<float, access::write>   outTexture [[texture(1)]],
-  texture2d<uint, access::read>     keyBytes [[texture(2)]],
+  texture2d<uint, access::sample>     keyBytes [[texture(2)]],
   ushort3 gid [[thread_position_in_grid]])
 {
     if (gid.x >= outTexture.get_width() || gid.y >= outTexture.get_height()) {
