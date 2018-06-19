@@ -16,7 +16,7 @@ public class MetalCryptoTest {
     public static func testDecryption(encrypted:[Float32],
                                       key:[UInt32],
                                       expectedDecrypted:[Float32],
-                                      failCallback: FailCallback) {
+                                      failCallback: @escaping FailCallback) {
         
         let device:MTLDevice = MTLCreateSystemDefaultDevice()!
         guard let library = try? device.makeDefaultLibrary(bundle: Bundle(for: self)) else {
@@ -41,10 +41,13 @@ public class MetalCryptoTest {
                                                 featureChannels: 1, pixelFormat: pxFormat, usage: .shaderWrite),
             let keyTexture = device.makeTexture(array: key, width: key.count, height: 1,
                                                 featureChannels: 1, pixelFormat: .r32Uint, usage: .shaderRead)
-            else { return }
+        else {
+            failCallback("Texture & buffer creation is failed.", #file, #line)
+            return
+        }
         
         print("Array [size=\(encrypted.count)]: \(encrypted)\n")
-        print("---------------------------------------------------------\n\n", #file, #line)
+        print("---------------------------------------------------------\n\n")
         if  let queue = device.makeCommandQueue(),
             let buffer = queue.makeCommandBuffer(),
             let encoder:MTLComputeCommandEncoder = buffer.makeComputeCommandEncoder() {

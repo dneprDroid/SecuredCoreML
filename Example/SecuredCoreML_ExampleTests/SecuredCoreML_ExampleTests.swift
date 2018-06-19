@@ -22,7 +22,7 @@ class SecuredCoreML_ExampleTests: XCTestCase {
         super.tearDown()
     }
     
-    func testExample() {
+    func testDecryption() {
         MetalCryptoTest.testDecryption(encrypted:      [3.08285662e-44, 2.53311366e-01, 5.00000000e-01, 7.50264883e-01,
                                                         1.00000525e+00, 1.25005281e+00, 1.50276947e+00, 1.75000131e+00,
                                                         2.01059628e+00, 2.25000525e+00, 2.52649093e+00, 2.75000000e+00,
