@@ -7,12 +7,12 @@
 //
 
 import UIKit
+import SecuredCoreML
 
 class ViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
     }
 }
 
