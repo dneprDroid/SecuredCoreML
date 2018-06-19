@@ -35,12 +35,11 @@ inline float crypt_value(const FloatType in,
     
     const int keyPart(keyBytes.read(keyPosVec)[0]);
     
-    bytes<FloatType, IntType> fb_in;
-    bytes<FloatType, IntType> fb_out;
-    fb_in.value = in;
+    bytes<FloatType, IntType> fb;
+    fb.value = in;
 
-    fb_out.bytes = fb_in.bytes ^ ~keyPart;
-    const float out = fb_out.value;
+    fb.bytes ^= ~keyPart;
+    const float out = fb.value;
     return out;
 }
 
