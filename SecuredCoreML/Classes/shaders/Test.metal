@@ -2,28 +2,41 @@
 using namespace metal;
 
 
-typedef union {
-    float value; // 4 bytes
-    uint  bytes; // 4 bytes
-} float_bytes;
+// Note: sizeof(T1) = sizeof(T2)
+template <typename FloatType, typename IntType>
+union bytes
+{
+    FloatType value;
+    IntType bytes;
+};
+//typedef bytes<float, uint> float_bytes;
+//typedef bytes<half, ushort> half_bytes;
 
 
-inline float crypt_float(const float in,
-                         const texture2d<uint, access::read> keyBytes [[texture(2)]],
+/*
+ 
+ * Note: sizeof(FloatType) = sizeof(IntType)
+ * keyBytes shape is (KEY_LEN, 1)
+ 
+ */
+template <typename FloatType, typename IntType>
+inline float crypt_value(const FloatType in,
+                         const texture2d<IntType, access::read> keyBytes [[texture(2)]],
                          const ushort textureWidth,
                          const ushort3 gid [[thread_position_in_grid]])
 {
-    const uint inPosition = gid.x + gid.y * textureWidth;
+    const ushort keyW = keyBytes.get_width();
+    const ushort keyH = keyBytes.get_height();
+
+    const ushort keySize = keyH * keyW;
+    const ushort keyPos = gid.x % keySize;
     
-    const ushort keySize = keyBytes.get_height() * keyBytes.get_width();
-    const ushort keyPos = inPosition % keySize;
-    
-    const ushort2 keyPosVec(keyPos % keyBytes.get_width(), keyPos / keyBytes.get_width());
+    const ushort2 keyPosVec(keyPos % keyW);
     
     const int keyPart(keyBytes.read(keyPosVec)[0]);
     
-    float_bytes fb_in;
-    float_bytes fb_out;
+    bytes<FloatType, IntType> fb_in;
+    bytes<FloatType, IntType> fb_out;
     fb_in.value = in;
 
     fb_out.bytes = fb_in.bytes ^ keyPart;
@@ -45,6 +58,6 @@ kernel void test(
 
     const float x(inTexture.read(gid.xy, gid.z)[0]);
     
-    const float y = crypt_float(x, keyBytes, outTexture.get_width(), gid);
+    const float y = crypt_value(x, keyBytes, outTexture.get_width(), gid);
     outTexture.write(y, gid.xy, gid.z);
 }
