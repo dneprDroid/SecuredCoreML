@@ -6,7 +6,7 @@
 //
 
 import Metal
-import MetalKit
+import Accelerate
 
 import Metal
 
@@ -22,15 +22,11 @@ public class MetalCryptoTest {
             failCallback("key64Data creation failed", #file, #line)
             return
         }
-        let arrLen  = key64Data.count/MemoryLayout<UInt32>.size
-        let keyArray:[UInt32] = key64Data.withUnsafeBytes {
-            Array(UnsafeBufferPointer<UInt32>(start: $0, count: arrLen))
-        }
-        testDecryption(encrypted: encrypted, key: keyArray, expectedDecrypted: expectedDecrypted, failCallback: failCallback)
+        testDecryption(encrypted: encrypted, key: key64Data, expectedDecrypted: expectedDecrypted, failCallback: failCallback)
     }
     
     public static func testDecryption(encrypted:[Float32],
-                                      key:[UInt32],
+                                      key:Data,
                                       expectedDecrypted:[Float32],
                                       failCallback: @escaping FailCallback) {
         
@@ -49,14 +45,13 @@ public class MetalCryptoTest {
         let w = encrypted.count
         let h = 1
         
-        print("Key size: \(MemoryLayout<UInt32>.size * key.count * 8) bits")
+        print("Key size: \(key.count * 8) bits")
         guard
             let inTexture  = device.makeTexture(array: encrypted, width: w, height: h,
                                                 featureChannels: 1, pixelFormat: pxFormat, usage: .shaderRead),
             let outTexture = device.makeTexture(type: Float32.self, width: w, height: h,
                                                 featureChannels: 1, pixelFormat: pxFormat, usage: .shaderWrite),
-            let keyTexture = device.makeTexture(array: key, width: key.count, height: 1,
-                                                featureChannels: 1, pixelFormat: .r32Uint, usage: .shaderRead)
+            let keyTexture = device.makeTexture(data: key, type: UInt32.self, pixelFormat: .r32Uint, usage: .shaderRead)
         else {
             failCallback("Texture & buffer creation is failed.", #file, #line)
             return

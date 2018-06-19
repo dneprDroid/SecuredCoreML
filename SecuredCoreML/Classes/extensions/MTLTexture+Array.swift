@@ -54,7 +54,45 @@ public extension MTLTexture {
   }
 }
 
+
 public extension MTLDevice {
+    
+    func makeTexture<T>(data: Data,
+                        type: T.Type,
+                        pixelFormat: MTLPixelFormat,
+                        usage: MTLTextureUsage) -> MTLTexture? {
+        let width = data.count/MemoryLayout<T>.stride
+        return makeTexture(data: data,
+                           type: type,
+                           width: width, height: 1, featureChannels: 1,
+                           pixelFormat: pixelFormat, usage: usage)
+    }
+    
+    func makeTexture<T>(data: Data,
+                        type: T.Type,
+                        width: Int,
+                        height: Int,
+                        featureChannels: Int,
+                        pixelFormat: MTLPixelFormat,
+                        usage: MTLTextureUsage) -> MTLTexture? {
+        
+        assert(featureChannels != 3 && featureChannels <= 4, "channels must be 1, 2, or 4")
+        
+        let textureDescriptor = MTLTextureDescriptor.texture2DDescriptor(
+            pixelFormat: pixelFormat, width: width, height: height, mipmapped: false)
+        textureDescriptor.usage = usage
+        guard let texture = makeTexture(descriptor: textureDescriptor) else {
+            return nil
+        }
+        
+        let region = MTLRegionMake2D(0, 0, width, height)
+        let stride = MemoryLayout<T>.stride
+        let pointer = data.withUnsafeBytes { UnsafeRawPointer.init($0) }
+        texture.replace(region: region, mipmapLevel: 0, withBytes: pointer,
+                        bytesPerRow: width * stride * featureChannels)
+        return texture
+    }
+    
   /**
     Convenience function that makes a new texture from a Swift array.
     
@@ -65,7 +103,7 @@ public extension MTLDevice {
     - Parameters:
       - channels: The number of color components per pixel: must be 1, 2 or 4.
    */
-    public func makeTexture<T>(type: T.Type,
+    func makeTexture<T>(type: T.Type,
                                width: Int,
                                height: Int,
                                featureChannels: Int,
@@ -83,7 +121,7 @@ public extension MTLDevice {
         return texture
     }
     
-  public func makeTexture<T>(array: [T],
+    func makeTexture<T>(array: [T],
                              width: Int,
                              height: Int,
                              featureChannels: Int,
