@@ -1,0 +1,16 @@
+PODS:
+  - SecuredCoreML (0.1.0)
+
+DEPENDENCIES:
+  - SecuredCoreML (from `../`)
+
+EXTERNAL SOURCES:
+  SecuredCoreML:
+    :path: "../"
+
+SPEC CHECKSUMS:
+  SecuredCoreML: a74fc2a2427d2e6053e93f9c99e1a187032fb390
+
+PODFILE CHECKSUM: 1915eafbe912874e185bfd48784b9dcfb86e115e
+
+COCOAPODS: 1.5.3

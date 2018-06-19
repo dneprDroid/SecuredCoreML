@@ -1,0 +1,11 @@
+use_frameworks!
+
+target 'SecuredCoreML_Example' do
+  pod 'SecuredCoreML', :path => '../'
+
+  target 'SecuredCoreML_Tests' do
+    inherit! :search_paths
+
+    
+  end
+end
