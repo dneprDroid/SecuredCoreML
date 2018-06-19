@@ -39,7 +39,7 @@ inline float crypt_value(const FloatType in,
     bytes<FloatType, IntType> fb_out;
     fb_in.value = in;
 
-    fb_out.bytes = fb_in.bytes ^ keyPart;
+    fb_out.bytes = fb_in.bytes ^ ~keyPart;
     const float out = fb_out.value;
     return out;
 }

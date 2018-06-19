@@ -14,6 +14,22 @@ public class MetalCryptoTest {
     public typealias FailCallback = (_ message: String, _ file: StaticString, _ line: UInt)->Void
     
     public static func testDecryption(encrypted:[Float32],
+                                      key:String,
+                                      expectedDecrypted:[Float32],
+                                      failCallback: @escaping FailCallback) {
+        let base64Encoded = key._base64Encoded()
+        guard let key64Data = base64Encoded.data(using: .utf8) else {
+            failCallback("key64Data creation failed", #file, #line)
+            return
+        }
+        let arrLen  = key64Data.count/MemoryLayout<UInt32>.size
+        let keyArray:[UInt32] = key64Data.withUnsafeBytes {
+            Array(UnsafeBufferPointer<UInt32>(start: $0, count: arrLen))
+        }
+        testDecryption(encrypted: encrypted, key: keyArray, expectedDecrypted: expectedDecrypted, failCallback: failCallback)
+    }
+    
+    public static func testDecryption(encrypted:[Float32],
                                       key:[UInt32],
                                       expectedDecrypted:[Float32],
                                       failCallback: @escaping FailCallback) {
