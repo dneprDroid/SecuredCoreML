@@ -24,7 +24,7 @@ TODO: Add long description of the pod here.
   s.homepage         = 'https://github.com/alex.ovechko@yahoo.com/SecuredCoreML'
   # s.screenshots     = 'www.example.com/screenshots_1', 'www.example.com/screenshots_2'
   s.license          = { :type => 'MIT', :file => 'LICENSE' }
-  s.author           = { 'alex.ovechko@yahoo.com' => 'alex.ovechko@softensy.com' }
+  s.author           = { 'alex.ovechko@yahoo.com' => 'ovechko.056@gmail.com' }
   s.source           = { :git => 'https://github.com/alex.ovechko@yahoo.com/SecuredCoreML.git', :tag => s.version.to_s }
   # s.social_media_url = 'https://twitter.com/<TWITTER_USERNAME>'
 

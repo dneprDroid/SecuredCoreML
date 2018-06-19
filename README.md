@@ -22,7 +22,7 @@ pod 'SecuredCoreML'
 
 ## Author
 
-alex.ovechko@yahoo.com, alex.ovechko@softensy.com
+alex.ovechko@yahoo.com, ovechko.056@gmail.com
 
 ## License
 
