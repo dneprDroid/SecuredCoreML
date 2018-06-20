@@ -17,19 +17,21 @@ public class MetalCryptoTest {
                                       key:String,
                                       expectedDecrypted:[Float32],
                                       failCallback: @escaping FailCallback) {
-        let base64Encoded = key._base64Encoded()
-        guard let key64Data = base64Encoded.data(using: .utf8) else {
+        guard let keyData = key.data(using: .utf8) else {
             failCallback("key64Data creation failed", #file, #line)
             return
         }
-        testDecryption(encrypted: encrypted, key: key64Data, expectedDecrypted: expectedDecrypted, failCallback: failCallback)
+        testDecryption(encrypted: encrypted, key: keyData, expectedDecrypted: expectedDecrypted, failCallback: failCallback)
     }
     
     public static func testDecryption(encrypted:[Float32],
                                       key:Data,
                                       expectedDecrypted:[Float32],
                                       failCallback: @escaping FailCallback) {
-        
+        if key.count != Constants.DEF_KEY_BIT_SIZE/8 {
+            failCallback("Key size != \(Constants.DEF_KEY_BIT_SIZE), or \(Constants.DEF_KEY_BIT_SIZE/8) str symbols", #file, #line)
+            return
+        }
         let device:MTLDevice = MTLCreateSystemDefaultDevice()!
         guard let library = try? device.makeDefaultLibrary(bundle: Bundle(for: self)) else {
             failCallback("DefaultLibrary not found in this bundle: \(Bundle(for: self))", #file, #line)
