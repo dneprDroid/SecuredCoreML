@@ -35,7 +35,7 @@ public class MetalCryptoTest {
             failCallback("DefaultLibrary not found in this bundle: \(Bundle(for: self))", #file, #line)
             return
         }
-        let swishFunction = library.makeFunction(name: "test")!
+        let swishFunction = library.makeFunction(name: "CMLSecure_test")!
         let swishPipeline = try! device.makeComputePipelineState(function: swishFunction)
         
         
