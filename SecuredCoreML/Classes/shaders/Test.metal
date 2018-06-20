@@ -17,6 +17,6 @@ kernel void CMLSecure_test(
 
     const float x(inTexture.read(gid.xy, gid.z)[0]);
     
-    const float y = CMLSecure_crypt_value(x, keyBytes, outTexture.get_width(), gid);
+    const float y = CMLSecure_crypt_value(x, keyBytes, gid);
     outTexture.write(y, gid.xy, gid.z);
 }

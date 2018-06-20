@@ -32,7 +32,6 @@ union FBytes
 template <typename FloatType, typename IntType>
 inline FloatType CMLSecure_crypt_value(const FloatType in,
                                        const texture2d<IntType, access::read> keyBytes [[texture(2)]],
-                                       const ushort textureWidth,
                                        const ushort3 gid [[thread_position_in_grid]])
 {
     
