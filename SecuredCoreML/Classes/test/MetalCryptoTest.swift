@@ -57,7 +57,7 @@ public class MetalCryptoTest {
             return
         }
         
-        print("Array [size=\(encrypted.count)]: \(encrypted)\n")
+        print("Encrypted Array [size=\(encrypted.count)]: \(encrypted)\n")
         print("---------------------------------------------------------\n\n")
         if  let queue = device.makeCommandQueue(),
             let buffer = queue.makeCommandBuffer(),
@@ -70,7 +70,7 @@ public class MetalCryptoTest {
             buffer.commit()
             buffer.waitUntilCompleted()
             let output = outTexture.toFloatArray(width: outTexture.width, height: outTexture.height, featureChannels: 1)
-            print(output)
+            print("Decrypted array: \(output)")
             if expectedDecrypted.count != output.count {
                 failCallback("Output array length != `expectedDecrypted` length", #file, #line)
                 return
