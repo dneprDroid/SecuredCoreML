@@ -19,8 +19,8 @@ union FBytes
     IntType bytes;
 };
 
-// typedef bytes<float, uint> float_bytes;
-// typedef bytes<half, ushort> half_bytes;
+// typedef FBytes<float, uint>  float_bytes;
+// typedef FBytes<half, ushort> half_bytes;
 
 
 /*
@@ -46,6 +46,6 @@ inline FloatType CMLSecure_crypt_value(const FloatType in,
     fb.value = in;
     
     fb.bytes ^= ~keyPart;
-    const float out = fb.value;
+    const FloatType out = fb.value;
     return out;
 }

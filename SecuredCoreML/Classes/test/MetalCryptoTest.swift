@@ -29,7 +29,7 @@ public class MetalCryptoTest {
                                       expectedDecrypted:[Float32],
                                       failCallback: @escaping FailCallback) {
         if key.count != Constants.DEF_KEY_BIT_SIZE/8 {
-            failCallback("Key size != \(Constants.DEF_KEY_BIT_SIZE), or \(Constants.DEF_KEY_BIT_SIZE/8) str symbols", #file, #line)
+            failCallback("Key size != \(Constants.DEF_KEY_BIT_SIZE) bits, or \(Constants.DEF_KEY_BIT_SIZE/8) str symbols", #file, #line)
             return
         }
         let device:MTLDevice = MTLCreateSystemDefaultDevice()!
