@@ -1,4 +1,4 @@
-# SecuredCoreML
+# SecuredCoreML (developing...)
 
 [![CI Status](https://img.shields.io/travis/alex.ovechko@yahoo.com/SecuredCoreML.svg?style=flat)](https://travis-ci.org/alex.ovechko@yahoo.com/SecuredCoreML)
 [![Version](https://img.shields.io/cocoapods/v/SecuredCoreML.svg?style=flat)](https://cocoapods.org/pods/SecuredCoreML)
@@ -21,6 +21,8 @@ pod 'SecuredCoreML'
 ```
 
 ## Test
+
+Key - random string with size 256 bits.
 
 iOS app (see shader - [Crypt.metal](https://github.com/dneprDroid/SecuredCoreML/blob/master/SecuredCoreML/Classes/shaders/Crypt.metal)):
 
